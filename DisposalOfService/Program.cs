@@ -8,15 +8,14 @@ namespace DisposalOfService
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             using IHost host = CreateHostBuilder(args).Build();
             ExemplifyDisposableScoping(host.Services, "Scope1");
             Console.WriteLine();
             ExemplifyDisposableScoping(host.Services, "Scope2");
             Console.WriteLine();
-            host.Run();
-            //return host.RunAsync();
+            await host.RunAsync();
         }
 
         internal static IHostBuilder CreateHostBuilder(string[] args)
@@ -36,9 +35,11 @@ namespace DisposalOfService
             using IServiceScope serviceScope = serviceProvider.CreateScope();
             IServiceProvider serviceProvider1 = serviceScope.ServiceProvider;
 
+            _ = serviceProvider1.GetRequiredService<SingletonDisposable>();
+
             _ = serviceProvider1.GetRequiredService<TransientDisposable>();
             _ = serviceProvider1.GetRequiredService<ScopedDisposable>();
-            _ = serviceProvider1.GetRequiredService<SingletonDisposable>();
+
         }
     }
 }
