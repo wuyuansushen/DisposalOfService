@@ -8,14 +8,47 @@ namespace DisposalOfService
 {
     class Program
     {
-        static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            using IHost host = CreateHostBuilder(args).Build();
+            var myHost = GoAsync(args);
+            myHost.GetAwaiter().GetResult();
+        }
+        private static Task GoAsync(string[] args)
+        {
+            #region POC
+            /*
+            using (IHost host = CreateHostBuilder(args).Build())
+            {
+                ExemplifyDisposableScoping(host.Services, "Scope1");
+                Console.WriteLine();
+                ExemplifyDisposableScoping(host.Services, "Scope2");
+                Console.WriteLine();
+                var hostTask = host.RunAsync();
+            }
+            using(IHost host = CreateHostBuilder(args).Build())
+            {
+                ExemplifyDisposableScoping(host.Services, "Scope1");
+                Console.WriteLine();
+                ExemplifyDisposableScoping(host.Services, "Scope2");
+                Console.WriteLine();
+                var hostTask = host.RunAsync();
+                return hostTask;
+            }
+            */
+            #endregion
+            IHost host = CreateHostBuilder(args).Build();
             ExemplifyDisposableScoping(host.Services, "Scope1");
             Console.WriteLine();
             ExemplifyDisposableScoping(host.Services, "Scope2");
             Console.WriteLine();
-            await host.RunAsync();
+            var hostTask = host.RunAsync();
+
+
+            for(int i =0;i<10;i++)
+            {
+                Console.WriteLine($" {i}");
+            }
+            return hostTask;
         }
 
         internal static IHostBuilder CreateHostBuilder(string[] args)
